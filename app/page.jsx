@@ -1,11 +1,13 @@
+"use client";
 import Card from "@/sharecomponent/card/Card";
 import Table from "@/sharecomponent/table/Table";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import getCardDetail from "../lib/getCardDetail";
 
 const page = () => {
   const tableData = [
     {
-      Name: "Akshay Pawar",
+      Name: "",
       EmailAddress: "akshay.pawar@nexsales.com",
       CompanyName: "Nexsales",
       title: "jr developer",
@@ -41,6 +43,15 @@ const page = () => {
       PhoneNumber: "9632152346",
     },
   ];
+  const [cardDetails, setCardDetails] = useState([]);
+
+  const handleCard = () => {
+    const response = getCardDetail();
+    setCardDetails(response.data);
+  };
+  useEffect(() => {
+    handleCard();
+  }, []);
 
   return (
     <>
@@ -71,18 +82,41 @@ const page = () => {
 
             <div>
               <div className="flex justify-around pt-[32px] flex-wrap">
-                <div>
-                  <Card title={"Sign Up Initiated "} count={56} />
-                </div>
-                <div>
-                  <Card title={"Sign UP Completed"} count={32} />
-                </div>
-                <div>
-                  <Card title={"Log In Completed"} count={30} />
-                </div>
-                <div>
-                  <Card title={"Request Raised"} count={12} />
-                </div>
+                {cardDetails?.map((value, index) => {
+
+
+                 if(value.count==0 || value.count<0  ){
+                  let formattedCount = 0;
+                  return (
+                    <div>
+                      <Card
+                        title={value.title}
+                        count={formattedCount}
+                        classNameForCard=""
+                        classNameForTitle=""
+                        classNameForNumber=""
+                        classNameForLine=""
+                      />
+                    </div>
+                  );
+                 }
+                 else{
+                  let formattedCount = value.count;
+                  return (
+                    <div>
+                      <Card
+                        title={value.title}
+                        count={formattedCount}
+                        classNameForCard=""
+                        classNameForTitle=""
+                        classNameForNumber=""
+                        classNameForLine=""
+                      />
+                    </div>
+                  );
+                 }
+                  
+                })}
               </div>
             </div>
 
@@ -92,7 +126,10 @@ const page = () => {
 
             <div className="w-full flex flex-col p-5 bg-white mt-[1px]">
               <div className="shadow-lg">
-                <Table data={tableData} className="p-[15px] w-full flex flex-wrap" />
+                <Table
+                  data={tableData}
+                  className="p-[15px] w-full flex flex-wrap"
+                />
               </div>
             </div>
           </div>
